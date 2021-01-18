@@ -68,7 +68,6 @@ class ImageStore:
 
             if exif is not None:
                 orientation = exif.get(0x0112, 1) # 0x112: Exif orientation
-                print('orientate %s' % orientation)
 
                 if orientation == 1:
                     pass
