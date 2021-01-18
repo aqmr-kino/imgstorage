@@ -30,3 +30,11 @@ s.add_config('org', imgfilter.Null())
 s.push('./sample.jpg')
 
 ```
+
+## 更新履歴
+
+### v0.2.0 (2021-01-18)
+- Exif情報により回転されたJPEG画像に対応
+
+### v0.1.0 (2020-11-29)
+- 新規作成
