@@ -49,18 +49,44 @@ class ImageStore:
         """
         imgdata = None
 
+        # file open
         if type(src_image) is str:
             # src_image is filename
             imgdata = Image.open(src_image)
         elif isinstance(src_image, Image.Image):
             # src_image is Pillow Image object
-            imgdata = src_image
+            imgdata = src_image.copy()
         elif isinstance(src_image, io.IOBase):
             # src_image is file-like object
             imgdata = Image.open(src_image)
         else:
             raise TypeError('src_image type %s is unsupported' % type(src_image))
 
+        # image transpose with orientation exif (jpeg file)
+        if imgdata.format == 'JPEG':
+            exif = imgdata._getexif()
+
+            if exif is not None:
+                orientation = exif.get(0x0112, 1) # 0x112: Exif orientation
+
+                if orientation == 1:
+                    pass
+                elif orientation == 2:
+                    imgdata = imgdata.transpose(Image.FLIP_LEFT_RIGHT)
+                elif orientation == 3:
+                    imgdata = imgdata.transpose(Image.ROTATE_180)
+                elif orientation == 4:
+                    imgdata = imgdata.transpose(Image.FLIP_TOP_BOTTOM)
+                elif orientation == 5:
+                    imgdata = imgdata.transpose(Image.FLIP_LEFT_RIGHT).transpose(Image.ROTATE_90)
+                elif orientation == 6:
+                    imgdata = imgdata.transpose(Image.ROTATE_270)
+                elif orientation == 7:
+                    imgdata = imgdata.transpose(Image.FLIP_LEFT_RIGHT).transpose(Image.ROTATE_270)
+                elif orientation == 8:
+                    imgdata = imgdata.transpose(Image.ROTATE_90)
+
+        # filter applying and file store
         ret = dict([])
 
         for key in self.filt:
