@@ -18,7 +18,7 @@ mkdir -p /srv/storage/images/{thum,small,medium,org}
 from imgstorage import storage, imgfilter
 
 # ImgStoreオブジェクト作成
-s = imgstorage.storage.ImgStore('/srv/storage/images')
+s = storage.ImageStore('/srv/storage/images')
 
 # 画像保存設定
 s.add_config('thum', imgfilter.Crop(1.0) + imgfilter.Resize(256, 256))
@@ -27,7 +27,7 @@ s.add_config('medium', imgfilter.Shrink(2400, 2400))
 s.add_config('org', imgfilter.Null())
 
 # 画像を登録 (-> 各ディレクトリ配下に格納されます)
-s.push('./sample.jpg')
+s.push('./sample.jpg', 'sample-converted.jpg')
 
 ```
 
